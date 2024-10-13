@@ -1,6 +1,6 @@
 package com.zql.wiki.domain;
 
-/*实体类层 对应数据库*/
+/*实体类层 对应数据库表*/
 public class Test {
     private int id;
     private String name;
