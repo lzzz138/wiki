@@ -48,7 +48,9 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      Content
+      <pre>
+{{ebooks}}
+      </pre>
     </a-layout-content>
   </a-layout>
 </template>
@@ -57,16 +59,29 @@
 
 <script>
 // @ is an alias to /src
-
+import {onMounted,ref} from "vue";
 import axios from "axios";
 
 export default {
   name: 'Home',
   setup(){
     console.log("setup");
-    axios.get("http://localhost:8880/ebook/list?name=Spring").then((response)=>{
-      console.log(response)
-    })
+    const ebooks=ref();
+
+    onMounted(()=>{
+      console.log("onMounted");
+      axios.get("http://localhost:8880/ebook/list?name=Spring").then((response)=>{
+        const data=response.data;
+        ebooks.value=data.content;
+        console.log(response);
+      });
+
+    });
+
+    return{
+      ebooks
+    }
+
   }
 }
 </script>
