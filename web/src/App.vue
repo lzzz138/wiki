@@ -41,5 +41,3 @@ export default {
 }
 </style>
 
-<script setup lang="ts">
-</script>
