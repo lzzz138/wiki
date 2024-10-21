@@ -7,6 +7,7 @@ import com.zql.wiki.req.EbookReq;
 import com.zql.wiki.resp.EbookResp;
 import com.zql.wiki.util.CopyUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -19,8 +20,9 @@ public class EbookService {
     public List<EbookResp> list(EbookReq ebookReq) {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
-
-        criteria.andNameLike("%" + ebookReq.getName() + "%");
+        if(!ObjectUtils.isEmpty(ebookReq.getName())){
+            criteria.andNameLike("%" + ebookReq.getName() + "%");
+        }
 
         List<Ebook> ebooks = ebookMapper.selectByExample(ebookExample);
 
