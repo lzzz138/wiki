@@ -1,16 +1,16 @@
-GET http://localhost:8080/hello
+GET http://localhost:8880/hello
 Accept: application/json
 
 ###gtr
 
-POST http://localhost:8080/hello/post
+POST http://localhost:8880/hello/post
 Content-Type: application/x-www-form-urlencoded
 
 name=Test
 
 ###ptrp
 
-GET http://localhost:8080/hello/list
+GET http://localhost:8880/hello/list
 Accept: application/json
 
 ###
