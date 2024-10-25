@@ -7,6 +7,7 @@ import com.zql.wiki.domain.EbookExample;
 import com.zql.wiki.mapper.EbookMapper;
 import com.zql.wiki.req.EbookReq;
 import com.zql.wiki.resp.EbookResp;
+import com.zql.wiki.resp.PageResp;
 import com.zql.wiki.util.CopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public List<EbookResp> list(EbookReq ebookReq) {
+    public PageResp<EbookResp> list(EbookReq ebookReq) {
 
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
@@ -32,7 +33,7 @@ public class EbookService {
             criteria.andNameLike("%" + ebookReq.getName() + "%");
         }
 
-        PageHelper.startPage(1,3);
+        PageHelper.startPage(ebookReq.getPage(),ebookReq.getSize());
         List<Ebook> ebooks = ebookMapper.selectByExample(ebookExample);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebooks);
@@ -49,6 +50,10 @@ public class EbookService {
 
         List<EbookResp> ebookResps = CopyUtil.copyList(ebooks, EbookResp.class);
 
-        return ebookResps;
+        PageResp<EbookResp> pageResp = new PageResp<>();
+        pageResp.setTotal(pageInfo.getTotal());
+        pageResp.setList(ebookResps);
+
+        return pageResp;
     }
 }

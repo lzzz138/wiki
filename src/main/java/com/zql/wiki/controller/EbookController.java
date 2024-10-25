@@ -3,6 +3,7 @@ package com.zql.wiki.controller;
 import com.zql.wiki.req.EbookReq;
 import com.zql.wiki.resp.CommonResp;
 import com.zql.wiki.resp.EbookResp;
+import com.zql.wiki.resp.PageResp;
 import com.zql.wiki.service.EbookService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +23,8 @@ public class EbookController {
     public CommonResp list(EbookReq ebookReq){
         /*CTRL+ALT+V自动生成类*/
         CommonResp<List<EbookResp>> resp = new CommonResp<>();
-        List<EbookResp> list = ebookService.list(ebookReq);
-        resp.setContent(list);
+        PageResp<EbookResp> list = ebookService.list(ebookReq);
+        resp.setContent(list.getList());
         return resp;
     }
 }
