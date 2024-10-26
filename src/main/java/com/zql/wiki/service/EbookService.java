@@ -5,8 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.zql.wiki.domain.Ebook;
 import com.zql.wiki.domain.EbookExample;
 import com.zql.wiki.mapper.EbookMapper;
-import com.zql.wiki.req.EbookReq;
-import com.zql.wiki.resp.EbookResp;
+import com.zql.wiki.req.EbookQueryReq;
+import com.zql.wiki.req.EbookSaveReq;
+import com.zql.wiki.resp.EbookQueryResp;
 import com.zql.wiki.resp.PageResp;
 import com.zql.wiki.util.CopyUtil;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq ebookReq) {
+    public PageResp<EbookQueryResp> list(EbookQueryReq ebookReq) {
 
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
@@ -48,12 +49,24 @@ public class EbookService {
             ebookResps.add(copy);
         }*/
 
-        List<EbookResp> ebookResps = CopyUtil.copyList(ebooks, EbookResp.class);
+        List<EbookQueryResp> ebookResps = CopyUtil.copyList(ebooks, EbookQueryResp.class);
 
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(ebookResps);
 
         return pageResp;
+    }
+
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req, Ebook.class);
+        if(ObjectUtils.isEmpty(ebook.getId())){
+            //没有id就是新增
+            ebookMapper.insert(ebook);
+        }
+        else{
+            //有id就是更新
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
     }
 }
