@@ -10,6 +10,7 @@ import com.zql.wiki.req.EbookSaveReq;
 import com.zql.wiki.resp.EbookQueryResp;
 import com.zql.wiki.resp.PageResp;
 import com.zql.wiki.util.CopyUtil;
+import com.zql.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class EbookService {
 
     @Resource
     private EbookMapper ebookMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq ebookReq) {
 
@@ -62,6 +66,7 @@ public class EbookService {
         Ebook ebook = CopyUtil.copy(req, Ebook.class);
         if(ObjectUtils.isEmpty(ebook.getId())){
             //没有id就是新增
+            ebook.setId(snowFlake.nextId());
             ebookMapper.insert(ebook);
         }
         else{
