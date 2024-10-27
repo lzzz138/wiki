@@ -17,7 +17,7 @@
           @change="handleTableChange"
       >
         <template #cover="{ text: cover }">
-          <img v-if="cover" :src="cover" alt="avatar" />
+          <img v-if="cover" :src="cover"  alt="avatar" style="width: 100px; height: 100px;" />
         </template>
 
         <template v-slot:action="{ text, record }">
@@ -25,9 +25,16 @@
             <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
-            <a-button type="danger">
-              删除
-            </a-button>
+            <a-popconfirm
+                title="是否确定删除?删除后无法恢复"
+                ok-text="是"
+                cancel-text="否"
+                @confirm="handleDelete(record.id)"
+            >
+              <a-button type="primary">
+                删除
+              </a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </a-table>
@@ -65,7 +72,7 @@
         <a-input v-model:value="ebook.description" />
       </a-form-item>
 
-    </a-form>>
+    </a-form>
   </a-modal>
 
 </template>
@@ -190,6 +197,20 @@
 
       };
 
+      const handleDelete = (id) => {
+        axios.delete("ebook/delete/"+id).then((response)=>{
+          const data=response.data;
+          if(data.success){
+            //重新查询列表
+            handleQuery({
+              page : pagination.value.current,
+              size : pagination.value.pageSize,
+            });
+          }
+        });
+
+      }
+
 
 
       onMounted(()=>{
@@ -210,8 +231,10 @@
         modalLoading,
         handleModalOk,
         edit,
+        ebook,
+
         add,
-        ebook
+        handleDelete
 
       }
 
