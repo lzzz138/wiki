@@ -4,9 +4,32 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <p>
-        <a-button type="primary" @click="add" size="large">
-          新增
-        </a-button>
+        <a-form
+            layout="inline"
+            :model="formState"
+            @finish="handleFinish"
+        >
+          <a-form-item>
+            <a-input v-model:value="formState.name" placeholder="查询的书名">
+            </a-input>
+          </a-form-item>
+
+          <a-form-item>
+            <a-button
+                type="primary"
+                html-type="submit"
+                :disabled="formState.name === '' "
+            >
+              查询
+            </a-button>
+          </a-form-item>
+
+          <a-form-item>
+            <a-button type="primary" @click="add" >
+              新增
+            </a-button>
+          </a-form-item>
+        </a-form>
       </p>
       <a-table
           :columns="columns"
@@ -80,7 +103,7 @@
 
 
 <script>
-  import { defineComponent, onMounted, ref } from 'vue';
+  import { defineComponent, onMounted, ref,reactive } from 'vue';
   import {message} from "ant-design-vue";
   import axios from 'axios';
 
@@ -141,6 +164,7 @@
           params:{
             page : params.page,
             size : params.size,
+            name : params.name,
           }
         }).then((response)=>{
           loading.value=false;
@@ -221,6 +245,21 @@
 
       }
 
+      /**
+       * 根据书名进行查询
+       */
+      const formState = reactive({
+        name: '',
+      });
+      const handleFinish = values => {
+        handleQuery({
+          page : 1,
+          size : pagination.value.pageSize,
+          name : formState.name,
+        })
+        console.log(values, formState);
+      };
+
 
 
       onMounted(()=>{
@@ -244,7 +283,10 @@
         ebook,
 
         add,
-        handleDelete
+        handleDelete,
+
+        formState,
+        handleFinish,
 
       }
 
