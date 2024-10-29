@@ -9,6 +9,7 @@ import com.zql.wiki.service.EbookService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 //返回字符串
 @RestController
@@ -21,7 +22,7 @@ public class EbookController {
      * 查询
      */
     @GetMapping("/ebook/list")
-    public CommonResp list(EbookQueryReq ebookReq){
+    public CommonResp list(@Valid EbookQueryReq ebookReq){
         /*CTRL+ALT+V自动生成类*/
         CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
         PageResp<EbookQueryResp> list = ebookService.list(ebookReq);
