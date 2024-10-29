@@ -34,7 +34,7 @@ public class EbookController {
      * 修改 新增
      */
     @PostMapping("/ebook/save")
-    public CommonResp save(@RequestBody EbookSaveReq req){
+    public CommonResp save(@Valid @RequestBody EbookSaveReq req){
         /*CTRL+ALT+V自动生成类*/
         CommonResp resp = new CommonResp<>();
         ebookService.save(req);
