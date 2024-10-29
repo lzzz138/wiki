@@ -106,6 +106,7 @@
   import { defineComponent, onMounted, ref,reactive } from 'vue';
   import {message} from "ant-design-vue";
   import axios from 'axios';
+  import {Tool} from "@/util/tool";
 
   export default defineComponent({
     name:'AdminEbook',
@@ -203,7 +204,7 @@
       const modalLoading = ref(false);
       const edit = (record) => {
         modalVisible.value = true;
-        ebook.value=record;
+        ebook.value=Tool.copy(record);
       };
       const add =()=>{
         modalVisible.value = true;
@@ -232,6 +233,7 @@
       };
 
       const handleDelete = (id) => {
+        console.log("删除的id是:"+id)
         axios.delete("ebook/delete/"+id).then((response)=>{
           const data=response.data;
           if(data.success){
