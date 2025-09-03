@@ -103,7 +103,7 @@
 
 
 <script>
-  import { defineComponent, onMounted, ref,reactive } from 'vue';
+  import { defineComponent, onMounted, ref} from 'vue';
   import {message} from "ant-design-vue";
   import axios from 'axios';
   import {Tool} from "@/util/tool";
@@ -250,14 +250,14 @@
       /**
        * 根据书名进行查询
        */
-      const formState = reactive({
-        name: '',
+      const formState = ref({
+        name:'',
       });
       const handleFinish = values => {
         handleQuery({
           page : 1,
           size : pagination.value.pageSize,
-          name : formState.name,
+          name : formState.value.name,
         })
         console.log(values, formState);
       };

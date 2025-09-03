@@ -40,8 +40,7 @@
                              targetPackage="com.zql.wiki.mapper"
                              type="XMLMAPPER"/>
 
-
-        <!--<table tableName="demo"/>-->
+        <!--有新增的表时修改tableName-->
         <table tableName="ebook"/>
 
     </context>
