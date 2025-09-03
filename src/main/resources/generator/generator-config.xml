@@ -22,9 +22,9 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://rm-bp10c74ib6akj2497qo.mysql.rds.aliyuncs.com/wikidev?serverTimezone=Asia/Shanghai"
-                        userId="wikidev"
-                        password="Lzq031107">
+                        connectionURL="jdbc:mysql://localhost:3306/wiki?serverTimezone=GMT%2B8"
+                        userId="root"
+                        password="1234">
         </jdbcConnection>
 
         <!-- domain类的位置 -->
@@ -41,7 +41,8 @@
                              type="XMLMAPPER"/>
 
         <!--有新增的表时修改tableName-->
-        <table tableName="ebook"/>
+        <!--<table tableName="ebook"/>-->
+        <table tableName="category"/>
 
     </context>
 </generatorConfiguration>
