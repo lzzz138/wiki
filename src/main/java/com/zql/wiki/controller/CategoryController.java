@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class CategoryController {
@@ -18,7 +19,18 @@ public class CategoryController {
     private CategoryService categoryService;
 
     /**
-     * 查询
+     * 不分页查询
+    * */
+    @GetMapping("/category/all")
+    public CommonResp all(){
+        CommonResp<List<CategoryQueryResp>> resp = new CommonResp<>();
+        List<CategoryQueryResp> list = categoryService.all();
+        resp.setContent(list);
+        return resp;
+    }
+
+    /**
+     * 分页查询
     * */
     @GetMapping("/category/list")
     public CommonResp list(@Valid CategoryQueryReq categoryReq){

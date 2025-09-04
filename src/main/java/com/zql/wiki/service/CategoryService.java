@@ -30,8 +30,19 @@ public class CategoryService {
     @Resource
     private SnowFlake snowFlake;
 
+    public List<CategoryQueryResp> all(){
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
+        List<Category> categories = categoryMapper.selectByExample(categoryExample);
+
+
+        List<CategoryQueryResp> categoryresps = CopyUtil.copyList(categories,CategoryQueryResp.class);
+        return categoryresps;
+    }
+
     public PageResp<CategoryQueryResp> list(CategoryQueryReq categoryReq){
         CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
         CategoryExample.Criteria criteria = categoryExample.createCriteria();
         if(!ObjectUtils.isEmpty(categoryReq.getName())){
             criteria.andNameLike("%"+categoryReq.getName()+"%");
