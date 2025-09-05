@@ -43,6 +43,7 @@
           <img v-if="cover" :src="cover"  alt="avatar" style="width: 100px; height: 100px;" />
         </template>
 
+        <!--text record可理解为一行的数据JSON格式 未渲染时二者相同-->
         <template v-slot:category="{ text, record }">
           <span>{{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}</span>
         </template>
