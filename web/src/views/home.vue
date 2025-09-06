@@ -5,13 +5,12 @@
           mode="inline"
           :style="{ height: '100%', borderRight: 0 }"
           @click="handleClick"
-          :openKeys="openKeys"
       >
         <a-menu-item key="welcome">
           <MailOutlined />
           <span>欢迎</span>
         </a-menu-item>
-        <a-sub-menu v-for="item in level1" :key="item.id" :disabled="true">
+        <a-sub-menu v-for="item in level1" :key="item.id" :disabled="false">
           <template v-slot:title>
             <span><user-outlined />{{item.name}}</span>
           </template>
@@ -27,7 +26,12 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-list item-layout="vertical" size="large" :grid="{gutter:20,column:3}" :data-source="ebooks">
+
+      <div class="welcome" v-show="isShowWelcome">
+        <h1>欢迎使用电子书</h1>
+      </div>
+
+      <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{gutter:20,column:3}" :data-source="ebooks">
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
             <template #actions>
@@ -88,7 +92,17 @@ export default {
       });
     };
 
+    const isShowWelcome = ref(true);
 
+    const handleClick = (value) => {
+      // console.log("menu click", value)
+      if (value.key === 'welcome') {
+        isShowWelcome.value = true;
+      } else{
+        isShowWelcome.value = false;
+      }
+      // isShowWelcome.value = value.key === 'welcome';
+    };
 
 
     onMounted(()=>{
@@ -129,6 +143,9 @@ export default {
       pagination,
       actions,
       level1,
+
+      isShowWelcome,
+      handleClick,
     };
 
   }
@@ -144,3 +161,6 @@ export default {
     margin: 5px 0;
   }
 </style>
+
+
+
