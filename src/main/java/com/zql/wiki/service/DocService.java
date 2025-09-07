@@ -33,10 +33,10 @@ public class DocService {
     public List<DocQueryResp> all(){
         DocExample docExample = new DocExample();
         docExample.setOrderByClause("sort asc");
-        List<Doc> categories = docMapper.selectByExample(docExample);
+        List<Doc> docs = docMapper.selectByExample(docExample);
 
 
-        List<DocQueryResp> docresps = CopyUtil.copyList(categories,DocQueryResp.class);
+        List<DocQueryResp> docresps = CopyUtil.copyList(docs,DocQueryResp.class);
         return docresps;
     }
 
@@ -49,14 +49,14 @@ public class DocService {
         }
 
         PageHelper.startPage(docReq.getPage(),docReq.getSize());
-        List<Doc> categories = docMapper.selectByExample(docExample);
+        List<Doc> docs = docMapper.selectByExample(docExample);
 
-        PageInfo<Doc> pageInfo = new PageInfo<>(categories);
+        PageInfo<Doc> pageInfo = new PageInfo<>(docs);
         LOG.info("总行数 {}",pageInfo.getTotal());
         LOG.info("总页数 {}",pageInfo.getPages());
 
 
-        List<DocQueryResp> docresps = CopyUtil.copyList(categories,DocQueryResp.class);
+        List<DocQueryResp> docresps = CopyUtil.copyList(docs,DocQueryResp.class);
         PageResp<DocQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(docresps);
