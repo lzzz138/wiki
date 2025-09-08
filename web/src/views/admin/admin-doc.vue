@@ -92,6 +92,10 @@
         <a-input v-model:value="doc.sort" />
       </a-form-item>
 
+      <a-form-item label="内容">
+        <div id="content"></div>
+      </a-form-item>
+
 
 
     </a-form>
@@ -107,6 +111,7 @@
   import axios from 'axios';
   import {Tool} from "@/util/tool";
   import {useRoute} from "vue-router";
+  import E from 'wangeditor'
 
   export default defineComponent({
     name:'AdminDoc',
@@ -220,6 +225,8 @@
       treeSelectData.value = [];
       const modalVisible = ref(false);
       const modalLoading = ref(false);
+
+
       const edit = (record) => {
         modalVisible.value = true;
         doc.value=Tool.copy(record);
@@ -231,6 +238,11 @@
         // 为选择树添加一个"无"
         treeSelectData.value.unshift({id: 0, name: '无'});
 
+        setTimeout(function (){
+          const editor = new E('#content');
+          editor.create();
+        },100);
+
       };
       const add =()=>{
         modalVisible.value = true;
@@ -240,6 +252,11 @@
         treeSelectData.value = Tool.copy(level1.value);
         // 为选择树添加一个"无"
         treeSelectData.value.unshift({id: 0, name: '无'});
+
+        setTimeout(function (){
+          const editor = new E('#content');
+          editor.create();
+        },100);
       }
       const handleModalOk = () => {
         modalLoading.value = true;
