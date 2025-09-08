@@ -261,10 +261,46 @@
       };
 
 
+      const deleteIds = [];
+      /**
+       * 查找整根树枝
+       */
+      const getDeleteIds = (treeSelectData, id) => {
+        // console.log(treeSelectData, id);
+        // 遍历数组，即遍历某一层节点
+        for (let i = 0; i < treeSelectData.length; i++) {
+          const node = treeSelectData[i];
+          if (node.id === id) {
+            // 如果当前节点就是目标节点
+            console.log("delete", node);
+            // 将目标ID放入结果集ids
+            // node.disabled = true;
+            deleteIds.push(id);
+
+            // 遍历所有子节点
+            const children = node.children;
+            if (Tool.isNotEmpty(children)) {
+              for (let j = 0; j < children.length; j++) {
+                getDeleteIds(children, children[j].id)
+              }
+            }
+          } else {
+            // 如果当前节点不是目标节点，则到其子节点再找找看。
+            const children = node.children;
+            if (Tool.isNotEmpty(children)) {
+              getDeleteIds(children, id);
+            }
+          }
+        }
+      };
+
+
+
 
       const handleDelete = (id) => {
         console.log("删除的id是:"+id)
-        axios.delete("doc/delete/"+id).then((response)=>{
+        getDeleteIds(level1.value, id);
+        axios.delete("doc/delete/"+deleteIds.join(",")).then((response)=>{
           const data=response.data;
           if(data.success){
             //重新查询列表
