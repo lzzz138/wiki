@@ -231,13 +231,13 @@
        * 编辑按钮弹出模态框,文档表单
        */
 
-      const doc=ref({});
+      const doc=ref();
+      doc.value = {};
       const treeSelectData = ref();
       treeSelectData.value = [];
       const modalVisible = ref(false);
       const modalLoading = ref(false);
-
-
+      let editor;
 
 
       const edit = (record) => {
@@ -264,7 +264,7 @@
       }
       const handleSave = () => {
         modalLoading.value = true;
-
+        doc.value.content = editor.txt.html();
         axios.post("doc/save",doc.value).then((response)=>{
           const data=response.data;
           modalLoading.value = false;
@@ -346,7 +346,7 @@
 
       onMounted(()=>{
         handleQuery();
-        const editor = new E('#content');
+        editor = new E('#content');
         editor.config.zIndex = 0;
         editor.create();
       });

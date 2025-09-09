@@ -3,8 +3,10 @@ package com.zql.wiki.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zql.wiki.domain.Content;
 import com.zql.wiki.domain.Doc;
 import com.zql.wiki.domain.DocExample;
+import com.zql.wiki.mapper.ContentMapper;
 import com.zql.wiki.mapper.DocMapper;
 import com.zql.wiki.req.DocQueryReq;
 import com.zql.wiki.req.DocSaveReq;
@@ -27,6 +29,9 @@ public class DocService {
 
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
 
     @Resource
     private SnowFlake snowFlake;
@@ -67,12 +72,17 @@ public class DocService {
 
     public void save(DocSaveReq docReq){
         Doc doc = CopyUtil.copy(docReq, Doc.class);
+        Content content = CopyUtil.copy(docReq, Content.class);
         if(ObjectUtils.isEmpty(docReq.getId())){
             doc.setId(snowFlake.nextId());
             docMapper.insert(doc);
+
+            content.setId(doc.getId());;
+            contentMapper.insert(content);
         }
         else{
             docMapper.updateByPrimaryKey(doc);
+            contentMapper.updateByPrimaryKeyWithBLOBs(content);
         }
     }
 
