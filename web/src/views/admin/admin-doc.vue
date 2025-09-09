@@ -257,6 +257,8 @@
 
 
       const edit = (record) => {
+        //清空富文本框
+        editor.txt.html("")
         modalVisible.value = true;
         doc.value=Tool.copy(record);
         handleContentQuery();
@@ -270,6 +272,8 @@
 
       };
       const add =()=>{
+        //清空富文本框
+        editor.txt.html("")
         modalVisible.value = true;
         doc.value={
           ebookId : route.query.ebookId,
@@ -284,9 +288,10 @@
         doc.value.content = editor.txt.html();
         axios.post("doc/save",doc.value).then((response)=>{
           const data=response.data;
-          modalLoading.value = false;
+          //modalLoading.value = false;
           if(data.success){
-            modalVisible.value = false;
+            //modalVisible.value = false;
+            message.success("保存成功!")
           }
           else{
             message.error(data.message);
