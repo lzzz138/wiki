@@ -3,103 +3,117 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <p>
-        <a-form
-            layout="inline"
-            :model="formState"
-            @finish="handleFinish"
-        >
-
-          <a-form-item>
-            <a-button
-                type="primary"
-                html-type="submit"
+      <a-row :gutter="24">
+        <a-col :span="8">
+          <p>
+            <a-form
+                layout="inline"
+                :model="formState"
+                @finish="handleFinish"
             >
-              查询
-            </a-button>
-          </a-form-item>
 
-          <a-form-item>
-            <a-button type="primary" @click="add" >
-              新增
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </p>
-      <a-table
-          :columns="columns"
-          :row-key="record => record.id"
-          :data-source="level1"
-          :loading="loading"
-          :pagination="false"
-      >
-        <template #cover="{ text: cover }">
-          <img v-if="cover" :src="cover"  alt="avatar" style="width: 100px; height: 100px;" />
-        </template>
+              <a-form-item>
+                <a-button
+                    type="primary"
+                    html-type="submit"
+                >
+                  查询
+                </a-button>
+              </a-form-item>
 
-        <template v-slot:action="{ text, record }">
-          <a-space size="small">
-            <a-button type="primary" @click="edit(record)">
-              编辑
-            </a-button>
-            <a-popconfirm
-                title="是否确定删除?删除后无法恢复"
-                ok-text="是"
-                cancel-text="否"
-                @confirm="handleDelete(record.id)"
-            >
-              <a-button type="primary">
-                删除
-              </a-button>
-            </a-popconfirm>
-          </a-space>
-        </template>
-      </a-table>
+              <a-form-item>
+                <a-button type="primary" @click="add" >
+                  新增
+                </a-button>
+              </a-form-item>
+            </a-form>
+          </p>
+          <a-table
+              :columns="columns"
+              :row-key="record => record.id"
+              :data-source="level1"
+              :loading="loading"
+              :pagination="false"
+              size="small"
+          >
+            <template #name="{ text, record }">
+              {{record.sort}} {{text}}
+            </template>
+
+            <template v-slot:action="{ text, record }">
+              <a-space size="small">
+                <a-button type="primary" @click="edit(record)" size="small">
+                  编辑
+                </a-button>
+                <a-popconfirm
+                    title="是否确定删除?删除后无法恢复"
+                    ok-text="是"
+                    cancel-text="否"
+                    @confirm="handleDelete(record.id)"
+                >
+                  <a-button type="primary" size="small">
+                    删除
+                  </a-button>
+                </a-popconfirm>
+              </a-space>
+            </template>
+          </a-table>
+        </a-col>
+        <a-col :span="16">
+          <p>
+            <a-form layout="inline" :model="param">
+              <a-form-item>
+                <a-button type="primary" @click="handleSave()">
+                  保存
+                </a-button>
+              </a-form-item>
+            </a-form>
+          </p>
+          <a-form
+              :model="doc"
+              layout="vertical"
+          >
+            <a-form-item>
+              <a-input v-model:value="doc.name" placeholder="名称" />
+            </a-form-item>
+
+            <a-form-item>
+              <a-tree-select
+                  v-model:value="doc.parent"
+                  style="width: 100%"
+                  :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                  placeholder="Please select"
+                  allow-clear
+                  tree-default-expand-all
+                  :tree-data="treeSelectData"
+                  :fieldNames="{label: 'name', value: 'id'}"
+              >
+              </a-tree-select>
+            </a-form-item>
+
+            <a-form-item>
+              <a-input v-model:value="doc.sort" placeholder="顺序" />
+            </a-form-item>
+
+            <a-form-item>
+              <div id="content"></div>
+            </a-form-item>
+
+          </a-form>
+        </a-col>
+      </a-row>
+
     </a-layout-content>
   </a-layout>
 
-  <a-modal
+<!--  <a-modal
       v-model:visible="modalVisible"
       title="文档表单"
       :confirm-loading="modalLoading"
       @ok="handleModalOk"
   >
-    <a-form
-        :model="doc"
-        :label-col="{ span: 8 }"
-        :wrapper-col="{ span: 16 }"
-    >
-      <a-form-item label="名称">
-        <a-input v-model:value="doc.name" />
-      </a-form-item>
 
-      <a-form-item label="父文档">
-        <a-tree-select
-            v-model:value="doc.parent"
-            style="width: 100%"
-            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-            placeholder="Please select"
-            allow-clear
-            tree-default-expand-all
-            :tree-data="treeSelectData"
-            :fieldNames="{label: 'name', value: 'id'}"
-        >
-        </a-tree-select>
-      </a-form-item>
-
-
-      <a-form-item label="顺序">
-        <a-input v-model:value="doc.sort" />
-      </a-form-item>
-
-      <a-form-item label="内容">
-        <div id="content"></div>
-      </a-form-item>
-
-
-
-    </a-form>
-  </a-modal>
+  </a-modal>-->
 
 </template>
 
@@ -121,18 +135,13 @@
 
       const loading=ref(false);
 
+
       const columns = [
         {
           title: '名称',
-          dataIndex: 'name'
-        },
-        {
-          title: '父文档',
-          dataIndex: 'parent'
-        },
-        {
-          title: '顺序',
-          dataIndex: 'sort'
+          dataIndex: 'name',
+          slots: { customRender: 'name' }
+          /*若此处有dataIndex 则渲染的text为dataindex对应的值 若无则text为一行的值*/
         },
         {
           title: 'Action',
@@ -227,6 +236,8 @@
       const modalLoading = ref(false);
 
 
+
+
       const edit = (record) => {
         modalVisible.value = true;
         doc.value=Tool.copy(record);
@@ -238,11 +249,6 @@
         // 为选择树添加一个"无"
         treeSelectData.value.unshift({id: 0, name: '无'});
 
-        setTimeout(function (){
-          const editor = new E('#content');
-          editor.create();
-        },100);
-
       };
       const add =()=>{
         modalVisible.value = true;
@@ -253,12 +259,8 @@
         // 为选择树添加一个"无"
         treeSelectData.value.unshift({id: 0, name: '无'});
 
-        setTimeout(function (){
-          const editor = new E('#content');
-          editor.create();
-        },100);
       }
-      const handleModalOk = () => {
+      const handleSave = () => {
         modalLoading.value = true;
 
         axios.post("doc/save",doc.value).then((response)=>{
@@ -342,6 +344,9 @@
 
       onMounted(()=>{
         handleQuery();
+        const editor = new E('#content');
+        editor.config.zIndex = 0;
+        editor.create();
       });
 
       return{
@@ -351,7 +356,7 @@
 
         modalVisible,
         modalLoading,
-        handleModalOk,
+        handleSave,
         edit,
         doc,
 
