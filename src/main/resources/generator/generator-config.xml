@@ -42,7 +42,7 @@
 
         <!--有新增的表时修改tableName-->
         <!--<table tableName="ebook"/>-->
-        <table tableName="doc"/>
+        <table tableName="content"/>
 
     </context>
 </generatorConfiguration>
