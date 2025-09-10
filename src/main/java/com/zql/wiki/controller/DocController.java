@@ -22,10 +22,10 @@ public class DocController {
     /**
      * 不分页查询
     * */
-    @GetMapping("/doc/all")
-    public CommonResp all(){
+    @GetMapping("/doc/all/{ebookId}")
+    public CommonResp all(@PathVariable Long ebookId){
         CommonResp<List<DocQueryResp>> resp = new CommonResp<>();
-        List<DocQueryResp> list = docService.all();
+        List<DocQueryResp> list = docService.all(ebookId);
         resp.setContent(list);
         return resp;
     }
