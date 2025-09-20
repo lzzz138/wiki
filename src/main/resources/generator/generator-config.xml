@@ -25,6 +25,9 @@
                         connectionURL="jdbc:mysql://localhost:3306/wiki?serverTimezone=GMT%2B8"
                         userId="root"
                         password="1234">
+            <!-- 仅仅查询当前库的表，不去查询其他库 -->
+            <property name="nullCatalogMeansCurrent" value="true" />
+            <property name="remarksReporting" value="true"/>
         </jdbcConnection>
 
         <!-- domain类的位置 -->

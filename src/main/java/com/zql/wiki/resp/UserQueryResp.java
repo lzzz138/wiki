@@ -1,6 +1,6 @@
-package com.zql.wiki.domain;
+package com.zql.wiki.resp;
 
-public class User {
+public class UserQueryResp {
     private Long id;
 
     private String loginName;
