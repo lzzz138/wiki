@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zql.wiki.domain.UserExample;
 import com.zql.wiki.domain.User;
+import com.zql.wiki.exception.BusinessException;
+import com.zql.wiki.exception.BusinessExceptionCode;
 import com.zql.wiki.mapper.UserMapper;
 import com.zql.wiki.req.UserQueryReq;
 import com.zql.wiki.req.UserSaveReq;
@@ -14,6 +16,7 @@ import com.zql.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -67,16 +70,39 @@ public class UserService {
         User user = CopyUtil.copy(req, User.class);
         if(ObjectUtils.isEmpty(user.getId())){
             //没有id就是新增
-            user.setId(snowFlake.nextId());
-            userMapper.insert(user);
+            User userDB = selectByLoginName(req.getLoginName());
+            if(ObjectUtils.isEmpty(userDB)){
+                user.setId(snowFlake.nextId());
+                userMapper.insert(user);
+            }else{
+                //抛出用户名已存在异常
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
+            }
+
+
         }
         else{
             //有id就是更新
-            userMapper.updateByPrimaryKey(user);
+            user.setLoginName(null);
+            //selective属性有值才更新
+            userMapper.updateByPrimaryKeySelective(user);
         }
     }
 
     public void delete(Long id) {
         userMapper.deleteByPrimaryKey(id);
+    }
+
+    public User selectByLoginName(String loginName){
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andLoginNameEqualTo(loginName);
+        List<User> users = userMapper.selectByExample(userExample);
+        if(CollectionUtils.isEmpty(users)){
+            return null;
+        }else {
+            return users.get(0);
+        }
+
     }
 }
