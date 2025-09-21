@@ -8,6 +8,7 @@ import com.zql.wiki.resp.PageResp;
 import com.zql.wiki.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -39,6 +40,7 @@ public class UserController {
     @PostMapping("/user/save")
     public CommonResp save(@Valid @RequestBody UserSaveReq req){
         /*CTRL+ALT+V自动生成类*/
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.save(req);
         return resp;

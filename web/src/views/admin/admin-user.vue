@@ -79,7 +79,7 @@
       <a-form-item label="昵称">
         <a-input v-model:value="user.name" />
       </a-form-item>
-      <a-form-item label="密码" v-show="!user.id">
+      <a-form-item label="密码">
         <a-input v-model:value="user.password"/>
       </a-form-item>
 
@@ -95,6 +95,8 @@
   import {message} from "ant-design-vue";
   import axios from 'axios';
   import {Tool} from "@/util/tool";
+  import md5 from "js-md5";
+
 
   export default defineComponent({
     name:'AdminUser',
@@ -185,6 +187,8 @@
       }
       const handleModalOk = () => {
         modalLoading.value = true;
+
+        user.value.password = md5(user.value.password);
 
         axios.post("user/save",user.value).then((response)=>{
           const data=response.data;
