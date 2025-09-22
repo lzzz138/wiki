@@ -43,6 +43,9 @@
 
         <template v-slot:action="{ text, record }">
           <a-space size="small">
+            <a-button type="primary" @click="editPassword(record)">
+              重置密码
+            </a-button>
             <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
@@ -80,6 +83,25 @@
         <a-input v-model:value="user.name" />
       </a-form-item>
       <a-form-item label="密码" v-show="!user.id">
+        <a-input v-model:value="user.password"/>
+      </a-form-item>
+
+    </a-form>
+  </a-modal>
+
+
+  <a-modal
+      v-model:visible="resetModalVisible"
+      title="重置密码"
+      :confirm-loading="resetModalLoading"
+      @ok="handleResetModalOk"
+  >
+    <a-form
+        :model="user"
+        :label-col="{ span: 8 }"
+        :wrapper-col="{ span: 16 }"
+    >
+      <a-form-item label="新密码">
         <a-input v-model:value="user.password"/>
       </a-form-item>
 
@@ -210,6 +232,43 @@
       };
 
 
+      /**
+       * 重置密码按钮弹出模态框
+       */
+          // -------- 表单 ---------
+
+      const resetModalVisible = ref(false);
+      const resetModalLoading = ref(false);
+      const editPassword = (record) => {
+        resetModalVisible.value = true;
+        user.value=Tool.copy(record);
+        user.value.password = null;
+      };
+      const handleResetModalOk = () => {
+        resetModalLoading.value = true;
+
+        user.value.password = md5(user.value.password);
+
+        axios.post("user/reset-password",user.value).then((response)=>{
+          const data=response.data;
+          resetModalLoading.value = false;
+          if(data.success){
+            resetModalVisible.value = false;
+          }
+          else{
+            message.error(data.message);
+          }
+        });
+
+        //重新查询列表
+        handleQuery({
+          page : pagination.value.current,
+          size : pagination.value.pageSize,
+        });
+
+      };
+
+
 
 
       const handleDelete = (id) => {
@@ -269,6 +328,13 @@
 
         formState,
         handleFinish,
+
+        resetModalVisible,
+        resetModalLoading,
+        editPassword,
+        handleResetModalOk,
+
+
 
       }
 

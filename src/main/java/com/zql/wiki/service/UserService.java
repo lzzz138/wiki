@@ -8,6 +8,7 @@ import com.zql.wiki.exception.BusinessException;
 import com.zql.wiki.exception.BusinessExceptionCode;
 import com.zql.wiki.mapper.UserMapper;
 import com.zql.wiki.req.UserQueryReq;
+import com.zql.wiki.req.UserResetPasswordReq;
 import com.zql.wiki.req.UserSaveReq;
 import com.zql.wiki.resp.PageResp;
 import com.zql.wiki.resp.UserQueryResp;
@@ -105,5 +106,10 @@ public class UserService {
             return users.get(0);
         }
 
+    }
+
+    public void resetPassword(UserResetPasswordReq req) {
+        User user = CopyUtil.copy(req, User.class);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 }

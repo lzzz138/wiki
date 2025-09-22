@@ -1,10 +1,11 @@
 package com.zql.wiki.controller;
 
 import com.zql.wiki.req.UserQueryReq;
+import com.zql.wiki.req.UserResetPasswordReq;
 import com.zql.wiki.req.UserSaveReq;
 import com.zql.wiki.resp.CommonResp;
-import com.zql.wiki.resp.UserQueryResp;
 import com.zql.wiki.resp.PageResp;
+import com.zql.wiki.resp.UserQueryResp;
 import com.zql.wiki.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,18 @@ public class UserController {
         log.info("控制层id:"+id);
         CommonResp resp = new CommonResp<>();
         userService.delete(id);
+        return resp;
+    }
+
+    /**
+     * 重置用户密码
+     */
+    @PostMapping("/user/reset-password")
+    public CommonResp resetPassword(@Valid @RequestBody UserResetPasswordReq req){
+        /*CTRL+ALT+V自动生成类*/
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp resp = new CommonResp<>();
+        userService.resetPassword(req);
         return resp;
     }
 }
