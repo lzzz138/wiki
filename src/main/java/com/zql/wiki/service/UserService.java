@@ -84,6 +84,7 @@ public class UserService {
         else{
             //有id就是更新
             user.setLoginName(null);
+            user.setPassword(null);
             //selective属性有值才更新
             userMapper.updateByPrimaryKeySelective(user);
         }
