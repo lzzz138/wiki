@@ -1,5 +1,6 @@
 package com.zql.wiki.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zql.wiki.req.UserLoginReq;
 import com.zql.wiki.req.UserQueryReq;
 import com.zql.wiki.req.UserResetPasswordReq;
@@ -9,13 +10,16 @@ import com.zql.wiki.resp.PageResp;
 import com.zql.wiki.resp.UserLoginResp;
 import com.zql.wiki.resp.UserQueryResp;
 import com.zql.wiki.service.UserService;
+import com.zql.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.concurrent.TimeUnit;
 
 //返回字符串
 @RestController
@@ -24,6 +28,12 @@ public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Resource
     private UserService userService;
+
+    @Resource
+    private SnowFlake snowFlake;
+
+    @Resource
+    private RedisTemplate redisTemplate;
 
     /**
      * 查询
@@ -83,6 +93,11 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp<UserLoginResp> resp = new CommonResp<>();
         UserLoginResp userLoginResp = userService.login(req);
+        /*生成唯一token，保存到后端并返回给前端*/
+        Long token = snowFlake.nextId();
+        userLoginResp.setToken(token.toString());
+        redisTemplate.opsForValue().set(token.toString(), JSONObject.toJSONString(userLoginResp), 3600 * 24, TimeUnit.SECONDS);
+
         resp.setContent(userLoginResp);
         return resp;
     }

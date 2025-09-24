@@ -13,6 +13,15 @@ public class UserLoginReq {
     @Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,32}$", message = "密码规则不正确")
     private String password;
 
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getLoginName() {
         return loginName;
@@ -36,6 +45,7 @@ public class UserLoginReq {
         final StringBuffer sb = new StringBuffer("UserLoginReq{");
         sb.append("loginName='").append(loginName).append('\'');
         sb.append(", password='").append(password).append('\'');
+        sb.append(", token='").append(token).append('\'');
         sb.append('}');
         return sb.toString();
     }
