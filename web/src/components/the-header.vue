@@ -25,7 +25,11 @@
         </a-menu-item>
       </a-menu>
 
-      <a class="login-menu" @click="showLoginModal">
+      <a class="login-menu" v-show="user.id">
+        <span>您好，{{user.name}}</span>
+      </a>
+
+      <a class="login-menu" v-show="!user.id" @click="showLoginModal">
         <span>登录</span>
       </a>
     </div>
@@ -59,10 +63,12 @@ import {message} from "ant-design-vue";
 export default defineComponent({
   name: 'the-header',
   setup() {
+    const user = ref();
+    user.value = {};
     // 用来登录
     const loginUser = ref({
       loginName: "test",
-      password: "test"
+      password: "test123"
     });
     const loginModalVisible = ref(false);
     const loginModalLoading = ref(false);
@@ -81,7 +87,7 @@ export default defineComponent({
         if (data.success) {
           loginModalVisible.value = false;
           message.success("登录成功！");
-
+          user.value = data.content;
         } else {
           message.error(data.message);
         }
@@ -94,6 +100,7 @@ export default defineComponent({
       showLoginModal,
       loginUser,
       login,
+      user,
     }
   }
 
