@@ -7,10 +7,12 @@ import com.zql.wiki.domain.User;
 import com.zql.wiki.exception.BusinessException;
 import com.zql.wiki.exception.BusinessExceptionCode;
 import com.zql.wiki.mapper.UserMapper;
+import com.zql.wiki.req.UserLoginReq;
 import com.zql.wiki.req.UserQueryReq;
 import com.zql.wiki.req.UserResetPasswordReq;
 import com.zql.wiki.req.UserSaveReq;
 import com.zql.wiki.resp.PageResp;
+import com.zql.wiki.resp.UserLoginResp;
 import com.zql.wiki.resp.UserQueryResp;
 import com.zql.wiki.util.CopyUtil;
 import com.zql.wiki.util.SnowFlake;
@@ -111,5 +113,21 @@ public class UserService {
     public void resetPassword(UserResetPasswordReq req) {
         User user = CopyUtil.copy(req, User.class);
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+
+    public UserLoginResp login(UserLoginReq req){
+        User user = selectByLoginName(req.getLoginName());
+        if(ObjectUtils.isEmpty(user)){
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        }else {
+            if(user.getPassword().equals(req.getPassword())){
+                UserLoginResp userLoginResp = CopyUtil.copy(user, UserLoginResp.class);
+                return userLoginResp;
+            }else {
+                throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+            }
+        }
+
     }
 }
