@@ -54,17 +54,20 @@
 </template>
 
 <script>
-import {defineComponent, ref} from 'vue';
+import {computed, defineComponent, ref} from 'vue';
 import axios from "axios";
 import md5 from "js-md5";
 import {message} from "ant-design-vue";
+import store from "@/store";
 
 
 export default defineComponent({
   name: 'the-header',
   setup() {
-    const user = ref();
-    user.value = {};
+
+    // 登录后保存
+    const user = computed(() => store.state.user);
+
     // 用来登录
     const loginUser = ref({
       loginName: "test",
@@ -87,7 +90,7 @@ export default defineComponent({
         if (data.success) {
           loginModalVisible.value = false;
           message.success("登录成功！");
-          user.value = data.content;
+          store.commit("setUser",data.content);
         } else {
           message.error(data.message);
         }
